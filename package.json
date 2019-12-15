@@ -1,0 +1,22 @@
+{
+  "name": "backend-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm i",
+    "start": "nodemon ./app/index.js"
+  },
+  "author": "Tiago Morais <tiago.morais@blip.pt>",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "file-system": "^2.2.2",
+    "mongoose": "^5.7.12",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}
