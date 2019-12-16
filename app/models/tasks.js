@@ -5,7 +5,7 @@ const TaskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    fequency: {
+    frequency: {
         type: String,
         required: true
     },
