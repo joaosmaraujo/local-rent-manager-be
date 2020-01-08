@@ -1,3 +1,4 @@
+const House = require("../models/houses");
 const AppController = require('./app');
 /**
  * The App controller class where other controller inherits or
@@ -11,6 +12,29 @@ class CustomerController extends AppController {
 	 */
 	constructor(model) {
 		super(model);
+	}
+
+	/**
+	 * @param {Object} req The request object
+	 * @param {Object} res The response object
+	 * @return {Object} res The response object
+	 */
+	async get (req, res) {
+		const _id = req.params.id;
+		const error = "Could not get object.";
+		try {
+			this._model.findOne({ _id })
+						.populate('houses')
+						.exec(function(err, customer) {
+							if (err) {
+								return res.status(404).send({ error: error + `Cannot find id '${_id}'`});
+							} else {
+								return res.send(customer);
+							}
+			});
+		} catch (err) {
+			return res.status(400).send({ error: error + err });
+		}
 	}
 }
 
