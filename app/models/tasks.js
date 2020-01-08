@@ -1,17 +1,28 @@
 const mongoose = require("../database/mongoose");
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const TaskSchema = new mongoose.Schema({
-    name: {
-        type: String,
+    houseId: {
+        type: ObjectId,
+        ref: 'House',
         required: true
     },
-    frequency: {
-        type: String,
+    workId: {
+        type: ObjectId,
+        ref: 'Work',
         required: true
     },
-    anticipation: {
+    cost: {
         type: Number,
         required: true
+    },
+    deadline: {
+        type: Date,
+        required: true
+    },
+    completed: {
+        type: Boolean,
+        default: false
     },
     createAt: {
         type: Date,

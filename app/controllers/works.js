@@ -3,7 +3,7 @@ const AppController = require('./app');
  * The App controller class where other controller inherits or
  * overrides pre defined and existing properties
  */
-class TaskRegistryController extends AppController {
+class WorkController extends AppController {
 	/**
 	 * @param {Model} model The default model object
 	 * for the controller. Will be required to create
@@ -14,4 +14,4 @@ class TaskRegistryController extends AppController {
 	}
 }
 
-module.exports = TaskRegistryController;
+module.exports = WorkController;
