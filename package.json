@@ -10,10 +10,14 @@
   "author": "Tiago Morais <tiago.morais@blip.pt>",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.7",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "file-system": "^2.2.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.12",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "path": "^0.12.7"
   },
   "devDependencies": {

@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const passport = require('passport');
 const House = require("../models/houses");
 const HouseController = require('../controllers/houses');
 const controller = new HouseController(House);

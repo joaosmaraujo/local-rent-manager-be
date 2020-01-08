@@ -4,7 +4,8 @@ const config = require("../config.js")
 mongoose.connect(config.CONNECTION_URL, {
     useNewUrlParser: true,
     useFindAndModify: false,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true
 });
 mongoose.Promise = global.Promise
 
