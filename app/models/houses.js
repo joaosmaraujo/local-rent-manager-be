@@ -2,7 +2,7 @@ const mongoose = require("../database/mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const HouseSchema = new mongoose.Schema({
-    address: {
+    label : {
         type: String,
         required: true
     },
@@ -10,11 +10,21 @@ const HouseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    address: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
     ownerId: {
         type: ObjectId,
         ref: 'Customer',
-        required: false
+        required: true
     },
+    tasks: [{ type: ObjectId, ref: 'Task' }],
+    bookings: [{ type: ObjectId, ref: 'Booking' }],
     createAt: {
         type: Date,
         default: Date.now()
