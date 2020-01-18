@@ -2,12 +2,12 @@ const mongoose = require("../database/mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const TaskSchema = new mongoose.Schema({
-    houseId: {
+    house: {
         type: ObjectId,
         ref: 'House',
         required: true
     },
-    workId: {
+    work: {
         type: ObjectId,
         ref: 'Work',
         required: true

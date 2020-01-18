@@ -51,7 +51,6 @@ class AppController {
 		} catch (err) {
 			return res.status(400).send({ error: error + err });
 		}
-
 	}
 
 	/**

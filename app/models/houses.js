@@ -18,7 +18,7 @@ const HouseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    ownerId: {
+    owner: {
         type: ObjectId,
         ref: 'Customer',
         required: true

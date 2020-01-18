@@ -10,7 +10,7 @@ const BookingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    houseId: {
+    house: {
         type: ObjectId,
         ref: 'House',
         required: true
