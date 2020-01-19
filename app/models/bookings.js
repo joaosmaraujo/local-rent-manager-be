@@ -29,6 +29,15 @@ const BookingSchema = new mongoose.Schema({
     }
 });
 
+BookingSchema.pre('remove', function(next) {
+    House.update(
+        { bookings : this._id}, 
+        { $pull: { bookings: this._id } },
+        { multi: true })  //if reference exists in multiple documents 
+    .exec();
+    next();
+});
+
 const Booking = mongoose.model("Booking", BookingSchema);
 
 module.exports = Booking;

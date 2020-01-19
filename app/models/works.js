@@ -1,4 +1,5 @@
 const mongoose = require("../database/mongoose");
+const Task = require("../models/tasks");
 
 const WorkSchema = new mongoose.Schema({
     name: {
@@ -17,6 +18,11 @@ const WorkSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     }
+});
+
+WorkSchema.pre('remove', function(next) {
+    Task.remove({ work: this._id }).exec();
+    next();
 });
 
 const Work = mongoose.model("Work", WorkSchema);

@@ -1,5 +1,6 @@
 const mongoose = require("../database/mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
+const House = require("../models/houses");
 
 const TaskSchema = new mongoose.Schema({
     house: {
@@ -28,6 +29,15 @@ const TaskSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     }
+});
+
+TaskSchema.pre('remove', function(next) {
+    House.update(
+        { tasks : this._id}, 
+        { $pull: { tasks: this._id } },
+        { multi: true })  //if reference exists in multiple documents 
+    .exec();
+    next();
 });
 
 const Task = mongoose.model("Task", TaskSchema);
