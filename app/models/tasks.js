@@ -1,18 +1,7 @@
 const mongoose = require("../database/mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
-const House = require("../models/houses");
 
 const TaskSchema = new mongoose.Schema({
-    house: {
-        type: ObjectId,
-        ref: 'House',
-        required: true
-    },
-    work: {
-        type: ObjectId,
-        ref: 'Work',
-        required: true
-    },
     cost: {
         type: Number,
         required: true
@@ -25,18 +14,31 @@ const TaskSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    house: {
+        type: ObjectId,
+        ref: 'House',
+        required: true
+    },
+    work: {
+        type: ObjectId,
+        ref: 'Work',
+        required: true
+    },
     createAt: {
         type: Date,
         default: Date.now()
     }
 });
 
+
+
 TaskSchema.pre('remove', async function() {
+    const House = require("../models/houses");
     await House.updateMany(
-        { tasks : this._id}, 
+        { tasks: this._id },
         { $pull: { tasks: this._id } },
-        { multi: true })  //if reference exists in multiple documents 
-    .exec();
+        { multi: true })
+    .exec()
 });
 
 const Task = mongoose.model("Task", TaskSchema);

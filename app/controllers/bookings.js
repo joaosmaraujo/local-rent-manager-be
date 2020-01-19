@@ -21,9 +21,9 @@ class BookingController extends AppController {
 	 */
 	async add(req, res) {
         try {
-			const boooking = await this._model.create(req.body);
-			const house = await House.findOne({ _id: boooking.house });
-			house.bookings.push(boooking._id);
+			const booking = await this._model.create(req.body);
+			const house = await House.findOne({ _id: booking.house });
+			house.bookings.push(booking._id);
 			await House.findByIdAndUpdate(house._id, house);
             return res.send({
                 name: "added object",
@@ -45,13 +45,13 @@ class BookingController extends AppController {
 		const _id = req.params.id;
 		const error = "Could not edit object.";
 		try {
-			const boooking = await this._model.findOne({ _id })
-			if (boooking) {
-				if (boooking.house != req.body.house._id) {
-					const previousHouse = await House.findOne({ _id: boooking.house });
+			const booking = await this._model.findOne({ _id });
+			if (booking) {
+				if (booking.house != req.body.house._id) {
+					const previousHouse = await House.findOne({ _id: booking.house });
 					const newHouse = await House.findOne({ _id: req.body.house._id });
-					previousHouse.boookings.splice(previousHouse.boookings.findIndex(item => item._id === boooking._id), 1)
-					newHouse.boookings.push(req.body._id);
+					previousHouse.bookings.splice(previousHouse.bookings.findIndex(item => item._id === booking._id), 1)
+					newHouse.bookings.push(req.body._id);
 					await House.findByIdAndUpdate(previousHouse._id, previousHouse);
 					await House.findByIdAndUpdate(newHouse._id, newHouse);
 				}

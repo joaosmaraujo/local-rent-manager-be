@@ -29,7 +29,8 @@ const BookingSchema = new mongoose.Schema({
     }
 });
 
-BookingSchema.pre('remove', async function(next) {
+BookingSchema.pre('remove', async function() {
+    const House = require("../models/houses");
     await House.updateMany(
         { bookings : this._id}, 
         { $pull: { bookings: this._id } },
