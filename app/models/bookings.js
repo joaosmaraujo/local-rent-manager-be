@@ -29,13 +29,12 @@ const BookingSchema = new mongoose.Schema({
     }
 });
 
-BookingSchema.pre('remove', function(next) {
-    House.update(
+BookingSchema.pre('remove', async function(next) {
+    await House.updateMany(
         { bookings : this._id}, 
         { $pull: { bookings: this._id } },
         { multi: true })  //if reference exists in multiple documents 
     .exec();
-    next();
 });
 
 const Booking = mongoose.model("Booking", BookingSchema);

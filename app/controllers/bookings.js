@@ -27,7 +27,7 @@ class BookingController extends AppController {
 			await House.findByIdAndUpdate(house._id, house);
             return res.send({
                 name: "added object",
-                content: { task },
+                content: { booking },
                 status: 200,
                 success: true
             });
@@ -47,7 +47,7 @@ class BookingController extends AppController {
 		try {
 			const boooking = await this._model.findOne({ _id })
 			if (boooking) {
-				if (boooking.house !== req.body.house._id) {
+				if (boooking.house != req.body.house._id) {
 					const previousHouse = await House.findOne({ _id: boooking.house });
 					const newHouse = await House.findOne({ _id: req.body.house._id });
 					previousHouse.boookings.splice(previousHouse.boookings.findIndex(item => item._id === boooking._id), 1)

@@ -20,9 +20,8 @@ const WorkSchema = new mongoose.Schema({
     }
 });
 
-WorkSchema.pre('remove', function(next) {
-    Task.remove({ work: this._id }).exec();
-    next();
+WorkSchema.pre('remove', async function() {
+    await Task.deleteMany({ work: this._id }).exec();
 });
 
 const Work = mongoose.model("Work", WorkSchema);

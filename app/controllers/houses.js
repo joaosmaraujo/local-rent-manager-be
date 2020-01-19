@@ -22,12 +22,12 @@ class HouseController extends AppController {
 	async add(req, res) {
         try {
 			const house = await this._model.create(req.body);
-			const customer = await Customer.findOne({ _id: house.customer });
+			const customer = await Customer.findOne({ _id: house.owner });
 			customer.houses.push(house._id);
 			await Customer.findByIdAndUpdate(customer._id, customer);
             return res.send({
                 name: "added object",
-                content: { task },
+                content: { house },
                 status: 200,
                 success: true
             });
@@ -45,15 +45,15 @@ class HouseController extends AppController {
 		const _id = req.params.id;
 		const error = "Could not edit object.";
 		try {
-			const house = await this._model.findOne({ _id })
+			const house = await this._model.findOne({ _id });
 			if (house) {
-				if (house.customer !== req.body.customer._id) {
-					const previousCustomer = await Customer.findOne({ _id: house.customer });
-					const newCustomer = await Customer.findOne({ _id: req.body.customer._id });
-					previousCustomer.houses.splice(previousCustomer.houses.findIndex(item => item._id === house._id), 1)
+				if (house.owner != req.body.owner._id) {
+					const previousCustomer = await Customer.findOne({ _id: house.owner });
+					const newCustomer = await Customer.findOne({ _id: req.body.owner._id });
+					previousCustomer.houses.splice(previousCustomer.houses.findIndex(item => item._id === house._id), 1);
 					newCustomer.houses.push(req.body._id);
-					await House.findByIdAndUpdate(previousCustomer._id, previousCustomer);
-					await House.findByIdAndUpdate(newCustomer._id, newCustomer);
+					await Customer.findByIdAndUpdate(previousCustomer._id, previousCustomer);
+					await Customer.findByIdAndUpdate(newCustomer._id, newCustomer);
 				}
 				await this._model.findByIdAndUpdate(_id, req.body);
 				return res.send();

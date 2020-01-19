@@ -18,9 +18,8 @@ const CustomerSchema = new mongoose.Schema({
     }
 });
 
-CustomerSchema.pre('remove', function(next) {
-    House.remove({ customer: this._id }).exec();
-    next();
+CustomerSchema.pre('remove', async function() {
+    await House.deleteMany({ customer: this._id }).exec();
 });
 
 const Customer = mongoose.model("Customer", CustomerSchema);

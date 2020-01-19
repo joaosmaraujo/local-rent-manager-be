@@ -34,15 +34,14 @@ const HouseSchema = new mongoose.Schema({
     }
 });
 
-HouseSchema.pre('remove', function(next) {
-    Task.remove({ house: this._id }).exec();
-    Booking.remove({ house: this._id}).exec();
-    Customer.update(
-        { houses : this._id}, 
+HouseSchema.pre('remove', async function() {
+    await Task.deleteMany({ house: this._id }).exec();
+    await Booking.deleteMany({ house: this._id}).exec();
+    await Customer.updateMany(
+        { houses: this._id },
         { $pull: { houses: this._id } },
         { multi: true })  //if reference exists in multiple documents 
     .exec();
-    next();
 });
 
 const House = mongoose.model("House", HouseSchema);

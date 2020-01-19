@@ -103,8 +103,9 @@ class AppController {
 		const _id = req.params.id;
 		const error = "Could not remove object.";
 		try {
-			if (await this._model.findOne({ _id })) {
-				await this._model.findByIdAndDelete(_id);
+			const obj = await this._model.findOne({ _id });
+			if (obj) {
+				await obj.remove();
 				return res.send();
 			} else {
 				return res.status(404).send({ error: error + `Cannot find id '${_id}'`});

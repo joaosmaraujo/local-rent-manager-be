@@ -47,7 +47,7 @@ class TaskController extends AppController {
 		try {
 			const task = await this._model.findOne({ _id })
 			if (task) {
-				if (task.house !== req.body.house._id) {
+				if (task.house != req.body.house._id) {
 					const previousHouse = await House.findOne({ _id: task.house });
 					const newHouse = await House.findOne({ _id: req.body.house._id });
 					previousHouse.tasks.splice(previousHouse.tasks.findIndex(item => item._id === task._id), 1)

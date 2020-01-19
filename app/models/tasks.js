@@ -31,13 +31,12 @@ const TaskSchema = new mongoose.Schema({
     }
 });
 
-TaskSchema.pre('remove', function(next) {
-    House.update(
+TaskSchema.pre('remove', async function() {
+    await House.updateMany(
         { tasks : this._id}, 
         { $pull: { tasks: this._id } },
         { multi: true })  //if reference exists in multiple documents 
     .exec();
-    next();
 });
 
 const Task = mongoose.model("Task", TaskSchema);
