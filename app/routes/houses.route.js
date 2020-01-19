@@ -3,12 +3,11 @@ const passport = require('passport');
 const House = require("../models/houses");
 const HouseController = require('../controllers/houses');
 const controller = new HouseController(House);
-//const auth = require("../middlewares/auth.middleware");
 
-router.post('/', controller.add);
-router.get('/', controller.getAll);
-router.get('/:id', controller.get);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.remove);
+router.post('/', passport.authenticate('jwt', { session: false }), controller.add);
+router.get('/', passport.authenticate('jwt', { session: false }), controller.getAll);
+router.get('/:id', passport.authenticate('jwt', { session: false }), controller.get);
+router.put('/:id', passport.authenticate('jwt', { session: false }), controller.update);
+router.delete('/:id', passport.authenticate('jwt', { session: false }), controller.remove);
 
 module.exports = app => app.use("/houses", router);

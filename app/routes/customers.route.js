@@ -1,14 +1,13 @@
 const router = require("express").Router();
-const passport = require('passport');
 const Customer = require("../models/customers");
 const CustomerController = require('../controllers/customers');
 const controller = new CustomerController(Customer);
-//const auth = require("../middlewares/auth.middleware");
+const passport = require('passport');
 
-router.post('/', controller.add);
+router.post('/', passport.authenticate('jwt', { session: false }), controller.add);
 router.get('/', passport.authenticate('jwt', { session: false }), controller.getAll);
-router.get('/:id', controller.get);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.remove);
+router.get('/:id', passport.authenticate('jwt', { session: false }), controller.get);
+router.put('/:id', passport.authenticate('jwt', { session: false }), controller.update);
+router.delete('/:id', passport.authenticate('jwt', { session: false }), controller.remove);
 
 module.exports = app => app.use("/customers", router);

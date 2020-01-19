@@ -7,7 +7,6 @@ const key = require('../config').SECRET;
 const User = require("../models/users");
 //const UserController = require('../controllers/users');
 //const controller = new UserController(User);
-//const auth = require("../middlewares/auth.middleware");
 
 router.post('/register', (req, res) => {
     let { firstName, lastName, username, email, password, confirm_password } = req.body;
