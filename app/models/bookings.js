@@ -23,6 +23,22 @@ const BookingSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    checkInCompleted: {
+        type: Boolean,
+        default: false
+    },
+    checkOutCompleted: {
+        type: Boolean,
+        default: false
+    },
+    checkInBy: {
+        type: ObjectId,
+        ref: 'User'
+    },
+    checkOutBy: {
+        type: ObjectId,
+        ref: 'User'
+    },
     createAt: {
         type: Date,
         default: Date.now()

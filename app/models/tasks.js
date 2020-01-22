@@ -14,6 +14,10 @@ const TaskSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    completedBy: {
+        type: ObjectId,
+        ref: 'User'
+    },
     house: {
         type: ObjectId,
         ref: 'House',
