@@ -5,9 +5,10 @@ const passport = require('passport');
 const key = require('../config').SECRET;
 
 const User = require("../models/users");
-//const UserController = require('../controllers/users');
-//const controller = new UserController(User);
+const UserController = require('../controllers/users');
+const controller = new UserController(User);
 
+router.get('/', passport.authenticate('jwt', { session: false }), controller.getAll);
 router.post('/register', (req, res) => {
     let { firstName, lastName, username, email, password, confirm_password } = req.body;
     if (password !== confirm_password) {
