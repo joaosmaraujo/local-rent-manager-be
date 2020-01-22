@@ -1,4 +1,3 @@
-const House = require("../models/houses");
 const AppController = require('./app');
 /**
  * The App controller class where other controller inherits or
@@ -24,7 +23,10 @@ class CustomerController extends AppController {
 		const error = "Could not get object.";
 		try {
 			this._model.findOne({ _id })
-						.populate('houses')
+						.populate({
+							path: 'houses',
+							populate: { path: 'tasks', select: 'cost' }
+						})
 						.exec(function(err, customer) {
 							if (err) {
 								return res.status(404).send({ error: error + `Cannot find id '${_id}'`});
