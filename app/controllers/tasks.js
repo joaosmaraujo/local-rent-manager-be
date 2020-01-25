@@ -1,5 +1,28 @@
 const House = require("../models/houses");
+const User = require("../models/users");
 const AppController = require('./app');
+
+async function updateTaskHouse(task, requestBody) {
+	const previousHouse = await House.findOne({ _id: task.house });
+	const newHouse = await House.findOne({ _id: requestBody.house._id });
+	previousHouse.tasks.splice(previousHouse.tasks.findIndex(item => item._id === task._id), 1)
+	newHouse.tasks.push(requestBody._id);
+	await House.findByIdAndUpdate(previousHouse._id, previousHouse);
+	await House.findByIdAndUpdate(newHouse._id, newHouse);
+}
+
+async function increaseUserTasksCounter(userId) {
+	const user = await User.findOne({ _id: userId });
+	user.tasks++;
+	await User.findByIdAndUpdate(user._id, user);
+}
+
+async function decreaseUserTasksCounter(userId) {
+	const user = await User.findOne({ _id: userId });
+	user.tasks--;
+	await User.findByIdAndUpdate(user._id, user);
+}
+
 /**
  * The App controller class where other controller inherits or
  * overrides pre defined and existing properties
@@ -25,14 +48,17 @@ class TaskController extends AppController {
 			const house = await House.findOne({ _id: task.house });
 			house.tasks.push(task._id);
 			await House.findByIdAndUpdate(house._id, house);
+			if (task.completed && task.completedBy) {
+				increaseUserTasksCounter(task.completedBy);
+			}
             return res.send({
-                name: "added object",
+                name: "Added task",
                 content: { task },
                 status: 200,
                 success: true
             });
         } catch (err) {
-            return res.status(400).send({ error: "Could not add house. " + err });
+            return res.status(400).send({ error: "Could not add task." });
         }
 	}
 
@@ -45,16 +71,27 @@ class TaskController extends AppController {
 		const _id = req.params.id;
 		const error = "Could not edit object.";
 		try {
-			const task = await this._model.findOne({ _id })
+			const task = await this._model.findOne({ _id });
 			if (task) {
 				if (task.house != req.body.house._id) {
-					const previousHouse = await House.findOne({ _id: task.house });
-					const newHouse = await House.findOne({ _id: req.body.house._id });
-					previousHouse.tasks.splice(previousHouse.tasks.findIndex(item => item._id === task._id), 1)
-					newHouse.tasks.push(req.body._id);
-					await House.findByIdAndUpdate(previousHouse._id, previousHouse);
-					await House.findByIdAndUpdate(newHouse._id, newHouse);
+					updateTaskHouse(task, req.body);
 				}
+				if (task.completed !== req.body.completed) {
+					// if task was completed and now it's not
+					if (!req.body.completed) {
+						decreaseUserTasksCounter(task.completedBy);
+					}
+					// if task was not completed and now it is
+					else {
+						increaseUserTasksCounter(req.body.completedBy);
+					}
+				}
+				// if task was and it is still completed but completedBy was changed
+				else if (task.completed && task.completedBy !== req.body.completedBy) {
+					increaseUserTasksCounter(req.body.completedBy);
+					decreaseUserTasksCounter(task.completedBy);
+				}
+
 				await this._model.findByIdAndUpdate(_id, req.body);
 				return res.send();
 			} else {

@@ -24,6 +24,11 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    counters: {
+        tasks: { type: Number, default: 0 },
+        checkIns: { type: Number, default: 0 },
+        checkOuts: { type: Number, default: 0 }
+    },
     createAt: {
         type: Date,
         default: Date.now()

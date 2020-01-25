@@ -1,5 +1,5 @@
 /**
- * The App controller class where other controller inherits or
+ * The App controller class where other controller inherits from or
  * overrides pre defined and existing properties
  */
 class AppController {
