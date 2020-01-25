@@ -1,13 +1,13 @@
 {
-  "name": "backend-app",
+  "name": "lrm-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Local Rent Manager REST API",
   "main": "index.js",
   "scripts": {
     "prestart": "npm i",
     "start": "nodemon ./app/index.js"
   },
-  "author": "Tiago Morais <tiago.morais@blip.pt>",
+  "author": "João Araújo <joaosmaraujo@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.7",
