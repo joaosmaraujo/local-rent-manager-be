@@ -43,6 +43,43 @@ router.post('/register', (req, res) => {
     })
 });
 
+router.put('/:id/reset-password', passport.authenticate('jwt', { session: false }), (req, res) => {
+    let { password, confirm_password } = req.body;
+    if (password !== confirm_password) {
+        return res.status(400).json({ msg: "Password does not match"});
+    }
+    // Find user
+    User.findOne({ _id: req.params.id }).then(user => {
+        if (user) {
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(password, salt, (err, hash) => {
+                    if (err) throw err;
+                    user.password = hash;
+                    user.save().then(() => {
+                        return res.status(201).json({ success: true, msg: "Password is now changed."})
+                    })
+                })
+            });
+        }
+    });
+});
+
+router.put('/:id/', passport.authenticate('jwt', { session: false }), (req, res) => {
+    let { firstName, lastName, username, email } = req.body;
+    // Find user
+    User.findOne({ _id: req.params.id }).then(user => {
+        if (user) {
+            user.firstName = firstName;
+            user.lastName = lastName;
+            user.username = username;
+            user.email = email;
+            user.save().then(() => {
+                return res.status(201).json({ success: true, msg: "User details are now changed."})
+            });
+        }
+    });
+});
+
 router.post('/login', (req, res) => {
     User.findOne({ username: req.body.username }).then(user => {
         if(!user) {
@@ -82,8 +119,5 @@ router.post('/login', (req, res) => {
 router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({ user: req.user });
 });
-
-/* router.put('/:id', controller.update);
-router.delete('/:id', controller.remove); */
 
 module.exports = app => app.use("/users", router);
