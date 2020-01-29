@@ -1,16 +1,9 @@
+const Customer = require("../models/customers");
 const AppController = require('./app');
-/**
- * The App controller class where other controller inherits or
- * overrides pre defined and existing properties
- */
+
 class CustomerController extends AppController {
-	/**
-	 * @param {Model} model The default model object
-	 * for the controller. Will be required to create
-	 * an instance of the controller
-	 */
-	constructor(model) {
-		super(model);
+	constructor() {
+		super(Customer);
 	}
 
 	/**
@@ -20,7 +13,7 @@ class CustomerController extends AppController {
 	 */
 	async get (req, res) {
 		const _id = req.params.id;
-		const error = "Could not get object.";
+		const error = "Could not get customer.";
 		try {
 			this._model.findOne({ _id })
 						.populate({

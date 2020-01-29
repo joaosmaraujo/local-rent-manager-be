@@ -1,5 +1,6 @@
 const House = require("../models/houses");
 const User = require("../models/users");
+const Task = require("../models/tasks");
 const AppController = require('./app');
 
 async function updateTaskHouse(task, requestBody) {
@@ -23,18 +24,9 @@ async function decreaseUserTasksCounter(userId) {
 	await User.findByIdAndUpdate(user._id, user);
 }
 
-/**
- * The App controller class where other controller inherits or
- * overrides pre defined and existing properties
- */
 class TaskController extends AppController {
-	/**
-	 * @param {Model} model The default model object
-	 * for the controller. Will be required to create
-	 * an instance of the controller
-	 */
-	constructor(model) {
-		super(model);
+	constructor() {
+		super(Task);
 	}
 
 	/**
@@ -52,7 +44,7 @@ class TaskController extends AppController {
 				increaseUserTasksCounter(task.completedBy);
 			}
             return res.send({
-                name: "Added task",
+                message: "Added task",
                 content: { task },
                 status: 200,
                 success: true
@@ -69,7 +61,7 @@ class TaskController extends AppController {
 	 */
 	async update (req, res) {
 		const _id = req.params.id;
-		const error = "Could not edit object.";
+		const error = "Could not edit task.";
 		try {
 			const task = await this._model.findOne({ _id });
 			if (task) {
@@ -101,20 +93,25 @@ class TaskController extends AppController {
 			return res.status(400).send({ error: error + err });
 		}
 		
-	}
+	}	
 
+	/**
+	 * @param {Object} req The request object
+	 * @param {Object} res The response object
+	 * @return {Object} res The response object
+	 */
 	async getAll(req, res) {
-		const error = "Could not get object.";
+		const error = 'Could not get object.';
 		try {
 			this._model.find()
 						.populate('house')
 						.populate('work')
-						.exec(function(err, booking) {					;
+						.exec(function(err, tasks) {					;
 							if (err) {
-								return res.status(404).send({ error: error + `Cannot find id '${_id}'`});
+								return res.status(404).send({ error: error + 'Cannot retrieve any tasks'});
 								
 							} else {
-								return res.send(booking);
+								return res.send(tasks);
 							}
 						});
 		} catch (err) {
@@ -129,16 +126,16 @@ class TaskController extends AppController {
 	 */
 	async get (req, res) {
 		const _id = req.params.id;
-		const error = "Could not get object.";
+		const error = "Could not get task.";
 		try {
 			this._model.findOne({ _id })
 						.populate('house')
 						.populate('work')
-						.exec(function(err, booking) {
+						.exec(function(err, task) {
 							if (err) {
 								return res.status(404).send({ error: error + `Cannot find id '${_id}'`});
 							} else {
-								return res.send(booking);
+								return res.send(task);
 							}
 			});
 		} catch (err) {

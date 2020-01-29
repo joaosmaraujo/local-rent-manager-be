@@ -1,20 +1,13 @@
 const House = require("../models/houses");
+const Booking = require("../models/bookings");
 const AppController = require('./app');
-/**
- * The App controller class where other controller inherits or
- * overrides pre defined and existing properties
- */
+
 class BookingController extends AppController {
-	/**
-	 * @param {Model} model The default model object
-	 * for the controller. Will be required to create
-	 * an instance of the controller
-	 */
-	constructor(model) {
-		super(model);
+	constructor() {
+		super(Booking);
 	}
 
-		/**
+	/**
 	 * @param {Object} req The request object
 	 * @param {Object} res The response object
 	 * @return {Object} res The response object
@@ -26,13 +19,13 @@ class BookingController extends AppController {
 			house.bookings.push(booking._id);
 			await House.findByIdAndUpdate(house._id, house);
             return res.send({
-                name: "added object",
+                name: "Added booking.",
                 content: { booking },
                 status: 200,
                 success: true
             });
         } catch (err) {
-            return res.status(400).send({ error: "Could not add house. " + err });
+            return res.status(400).send({ error: "Could not add booking." });
         }
 	}
 
@@ -43,11 +36,13 @@ class BookingController extends AppController {
 	 */
 	async update (req, res) {
 		const _id = req.params.id;
-		const error = "Could not edit object.";
+		const error = "Could not edit booking.";
 		try {
 			const booking = await this._model.findOne({ _id });
 			if (booking) {
 				if (booking.house != req.body.house._id) {
+					/* if house of the booking was changed,
+					removes the booking from the previous one and adds it to new one */
 					const previousHouse = await House.findOne({ _id: booking.house });
 					const newHouse = await House.findOne({ _id: req.body.house._id });
 					previousHouse.bookings.splice(previousHouse.bookings.findIndex(item => item._id === booking._id), 1)
@@ -66,17 +61,22 @@ class BookingController extends AppController {
 		
 	}
 
+	/**
+	 * @param {Object} req The request object
+	 * @param {Object} res The response object
+	 * @return {Object} res The response object
+	 */
 	async getAll(req, res) {
-		const error = "Could not get object.";
+		const error = "Failed to retrieve bookings.";
 		try {
 			this._model.find()
 						.populate('house')
-						.exec(function(err, booking) {					;
+						.exec(function(err, bookings) {					;
 							if (err) {
-								return res.status(404).send({ error: error + `Cannot find id '${_id}'`});
+								return res.status(404).send({ error });
 								
 							} else {
-								return res.send(booking);
+								return res.send(bookings);
 							}
 						});
 		} catch (err) {
@@ -91,7 +91,7 @@ class BookingController extends AppController {
 	 */
 	async get (req, res) {
 		const _id = req.params.id;
-		const error = "Could not get object.";
+		const error = "Could not get booking.";
 		try {
 			this._model.findOne({ _id })
 						.populate('house')

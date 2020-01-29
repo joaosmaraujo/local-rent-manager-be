@@ -1,17 +1,10 @@
 const Customer = require("../models/customers");
+const House = require("../models/houses");
 const AppController = require('./app');
-/**
- * The App controller class where other controller inherits or
- * overrides pre defined and existing properties
- */
+
 class HouseController extends AppController {
-	/**
-	 * @param {Model} model The default model object
-	 * for the controller. Will be required to create
-	 * an instance of the controller
-	 */
-	constructor(model) {
-		super(model);
+	constructor() {
+		super(House);
 	}
 
 	/**
@@ -26,7 +19,7 @@ class HouseController extends AppController {
 			customer.houses.push(house._id);
 			await Customer.findByIdAndUpdate(customer._id, customer);
             return res.send({
-                name: "added object",
+                name: "Added house",
                 content: { house },
                 status: 200,
                 success: true
@@ -43,7 +36,7 @@ class HouseController extends AppController {
 	 */
 	async update (req, res) {
 		const _id = req.params.id;
-		const error = "Could not edit object.";
+		const error = "Could not edit house.";
 		try {
 			const house = await this._model.findOne({ _id });
 			if (house) {
@@ -66,14 +59,19 @@ class HouseController extends AppController {
 		
 	}
 
+	/**
+	 * @param {Object} req The request object
+	 * @param {Object} res The response object
+	 * @return {Object} res The response object
+	 */
 	async getAll(req, res) {
-		const error = "Could not get object.";
+		const error = "Failed to retrieve houses.";
 		try {
 			this._model.find()
 						.populate('owner')
 						.exec(function(err, house) {					;
 							if (err) {
-								return res.status(404).send({ error: error + `Cannot find id '${_id}'`});
+								return res.status(404).send({ error });
 								
 							} else {
 								return res.send(house);
@@ -91,7 +89,7 @@ class HouseController extends AppController {
 	 */
 	async get (req, res) {
 		const _id = req.params.id;
-		const error = "Could not get object.";
+		const error = "Could not get house.";
 		try {
 			this._model.findOne({ _id })
 						.populate('owner')
