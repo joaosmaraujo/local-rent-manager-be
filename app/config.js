@@ -2,9 +2,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const config = {
-    PORT: process.env.API_PORT,
-    CONNECTION_URL: process.env.DB_CONNECTION_URL,
-    SECRET: process.env.AUTH_SECRET
+    PORT: process.env.PORT,
+    CONNECTION_URL: 'mongodb+srv://local-rent-admin:Rumo_ao_38@cluster0-zxxoa.mongodb.net/local-rent-db?retryWrites=true&w=majority',
+    SECRET: 'secret12345'
 };
 
 module.exports = config;
